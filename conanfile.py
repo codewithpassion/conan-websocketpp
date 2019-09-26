@@ -8,8 +8,8 @@ from conans import ConanFile, tools, CMake
 class WebsocketPPConan(ConanFile):
     name = "websocketpp"
     topics = ("conan", "websocketpp", "websocket", "network", "web", "rfc6455")
-    version = "0.8.1"
-    url = "https://github.com/bincrafters/conan-websocketpp"
+    version = "0.8.1-boost-fix"
+    url = "https://github.com/codewithpassion/conan-websocketpp"
     homepage = "https://github.com/zaphoyd/websocketpp"
     description = "Header only C++ library that implements RFC6455 The WebSocket Protocol"
     license = "	BSD-3-Clause"
@@ -27,13 +27,14 @@ class WebsocketPPConan(ConanFile):
         if self.options.asio == 'standalone':
             self.requires.add('asio/1.12.0@bincrafters/stable')
         else:
-            # 1.70 doesn't work: https://github.com/zaphoyd/websocketpp/issues/794
-            self.requires.add('boost/1.69.0@conan/stable')
+            self.requires.add('boost/1.70.0@conan/stable')
 
     def source(self):
-        archive_name = "{0}-{1}".format(self.name, self.version)
-        tools.get("{0}/archive/{1}.tar.gz".format(self.homepage, self.version),
-                  sha256="178899de48c02853b55b1ea8681599641cedcdfce59e56beaff3dd0874bf0286")
+        archive_name = "websocketpp-bc0dc579a58424d6874f04f7e7b03eaae1f35d0f"
+
+        # Fix for incompatible boost version
+        tools.get("https://codeload.github.com/zaphoyd/websocketpp/zip/bc0dc579a58424d6874f04f7e7b03eaae1f35d0f",
+                  filename=archive_name + ".zip")
         os.rename(archive_name, self._source_subfolder)
 
     def build(self):
